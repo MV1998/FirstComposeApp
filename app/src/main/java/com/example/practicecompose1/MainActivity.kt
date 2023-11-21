@@ -1,6 +1,7 @@
 package com.example.practicecompose1
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -24,6 +25,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 //        enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(230, 200))
         super.onCreate(savedInstanceState)
+        val url = BuildConfig.base_url
+        Log.d("TAG", "onCreate: $url")
         setContent {
             PracticeCompose1Theme {
                 Surface(

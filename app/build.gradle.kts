@@ -1,7 +1,16 @@
+import java.io.FileInputStream
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+val path = rootProject.file("gradle.properties")
+val keyProperties = Properties()
+keyProperties.load(FileInputStream(path))
 
 android {
     namespace = "com.example.practicecompose1"
@@ -21,13 +30,53 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(keyProperties["storeFile"] as String)
+            storePassword = keyProperties["storePassword"] as String
+            keyPassword = keyProperties["keyPassword"] as String
+            keyAlias = keyProperties["keyAlias"] as String
+        }
+
+        create("release") {
+            storeFile = file(keyProperties["storeFile"] as String)
+            storePassword = keyProperties["storePassword"] as String
+            keyPassword = keyProperties["keyPassword"] as String
+            keyAlias = keyProperties["keyAlias"] as String
+        }
+
+        create("staging") {
+            storeFile = file(keyProperties["storeFile"] as String)
+            storePassword = keyProperties["storePassword"] as String
+            keyPassword = keyProperties["keyPassword"] as String
+            keyAlias = keyProperties["keyAlias"] as String
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs["release"]
+            buildConfigField("String", "base_url", "\"https://api.pro.com\"")
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        debug {
+            signingConfig = signingConfigs["debug"]
+            buildConfigField("String", "base_url", "\"https://api.dev.com\"")
+            isMinifyEnabled = false
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+
+        create("staging") {
+            signingConfig = signingConfigs["staging"]
+            buildConfigField("String", "base_url", "\"https://api.staging.com\"")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -39,6 +88,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
