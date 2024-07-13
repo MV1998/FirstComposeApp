@@ -1,4 +1,4 @@
-# PracticeCompose1
+# FirstComposeapp
 This is a Banking UI App that was built during the learning of jetpack compose and kotlin.
 
 ### These are the screenshot of the app. Helpful for the people to understand how app looks like.
